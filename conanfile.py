@@ -5,12 +5,16 @@ import os
 class NetsnmpConan(ConanFile):
     name = "net-snmp"
     version = "5.7.3"
-    license = "<Put the package license here>"
-    url = "<Package recipe repository url here, for issues about the package>"
-    description = "<Description of Netsnmp here>"
+    license = "BSD-like. http://www.net-snmp.org/about/license.html"
+    url = "https://github.com/Artalus/conan-net-snmp"
+    description = "SNMP is a widely used protocol for monitoring the health and welfare of network equipment"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
-    default_options = "shared=False"
+    options = {
+        "shared": [True, False],
+        "fPIC": [True, False]
+    }
+    default_options = ("shared=False", "fPIC=False")
+
     requires = "OpenSSL/[>1.0.0,<1.1.0]@conan/stable"
 
     snmp = '%s-%s'%(name, version)
@@ -35,11 +39,6 @@ class NetsnmpConan(ConanFile):
                 ])
             autotools.make()
             autotools.install()
-
-    # def package(self):
-        # self.copy("*.h", dst="include", src="include")
-        # self.copy("*.so", dst="lib", src="lib", keep_path=False)
-        # self.copy("*.a", dst="lib", src="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ["netsnmpagent", "netsnmphelpers", "netsnmpmibs", "netsnmp"]
